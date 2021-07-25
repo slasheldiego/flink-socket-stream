@@ -38,18 +38,18 @@ public class App {
 
         env.getConfig().setGlobalJobParameters(params);
 
-        DataSet<String> text = env.socketTextStream("localhost",9999);
+        DataStream<String> text = env.socketTextStream("localhost",9999);
 
-        DataSet<String> filtered = text.filter(new FilterFunction<String>()
+        DataStream<String> filtered = text.filter(new FilterFunction<String>()
         {
             public boolean filter(String value){
                 return value.startsWith("N");
             }
         });
 
-        DataSet<Tuple2<String, Integer>> tokenized = filtered.map(new Tokenizer());
+        DataStream<Tuple2<String, Integer>> tokenized = filtered.map(new Tokenizer());
 
-        DataSet<Tuple2<String,Integer>> counts = tokenized.keyBy(0).sum(1);
+        DataStream<Tuple2<String,Integer>> counts = tokenized.keyBy(0).sum(1);
 
         counts.print();
 
